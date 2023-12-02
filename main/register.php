@@ -271,6 +271,7 @@ I agree with the <a href="#">Terms Of Service.</a>
 </form>
 <div class="login-footer">
 <p>Already have an account? <a href="login.php">Login.</a></p>
+<p> <a href="../Dashboard/index.php">Create Driver Account?</a></p>
 
 </div>
 </div>
