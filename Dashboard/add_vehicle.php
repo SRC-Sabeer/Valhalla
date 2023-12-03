@@ -2,7 +2,6 @@
 ob_start(); // Start output buffering
 session_start(); // Start the session
 
-
 include("./common/nav.php");
 include("../utilities/connection.php");
 
@@ -11,7 +10,6 @@ if (!isset($_SESSION['registration_step']) || $_SESSION['registration_step'] < 2
     header("Location: driver_details.php"); // Redirect to the driver_details.php page if the previous step is not completed
     exit;
 }
-
 
 if (isset($_POST['btn'])) {
     $v_name = $_POST['v_name'];
@@ -40,31 +38,45 @@ if (isset($_POST['btn'])) {
         move_uploaded_file($temp_back, "../Images/Vehicle/Back/$v_back_pic");
 
         $driverId = isset($_SESSION['driver_id']) ? $_SESSION['driver_id'] : null;
-if (!$driverId) {
-    echo "<script>alert('Driver ID not found.')</script>";
-    // Handle the error as needed
-    exit;
+
+        if (!$driverId) {
+            echo "<script>alert('Driver ID not found.')</script>";
+            // Handle the error as needed
+            exit;
+        }
+
+        // Insert vehicle details into the database
+        $insert = $con->prepare("INSERT INTO `pending_vehicle_details` (`driver_id`, `name`, `model`, `make`, `registration`, `number`, `color`, `seating_capacity`, `front_pic`, `back_pic`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+        $insert->bind_param(
+            "isssssssss",
+            $driverId,
+            $v_name,
+            $v_model,
+            $v_make,
+            $v_registration,
+            $v_number,
+            $v_color,
+            $v_seating_capacity,
+            $v_front_pic,
+            $v_back_pic
+        );
+
+        $run = $insert->execute();
+
+        if ($run) {
+            $_SESSION['registration_step'] = 3;
+            header("location:index.php");
+            exit; // Ensure script stops execution after header redirection
+        } else {
+            echo "<script>alert('Error occurred while inserting data.')</script>";
+        }
+    }
 }
 
-
-$insert = $con->prepare("INSERT INTO `vehicle_details` (`driver_details_id`, `name`, `model`, `make`, `registration`, `number`, `color`, `seating_capacity`, `front_pic`, `back_pic`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-
-$insert->bind_param("isssssssss", $driverId, $v_name, $v_model, $v_make, $v_registration, $v_number, $v_color, $v_seating_capacity, $v_front_pic, $v_back_pic);
-
-
-$run = $insert->execute();
-
-if ($run) {
-    $_SESSION['registration_step'] = 3;
-    header("location:index.php");
-    exit; // Ensure script stops execution after header redirection
-} else {
-    echo "<script>alert('Error occurred while inserting data.')</script>";
-}
-}
-}
 ob_end_flush(); // End output buffering and flush the buffer
 ?>
+
 
 
 

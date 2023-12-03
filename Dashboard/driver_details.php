@@ -50,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             move_uploaded_file($temp_driving_license_pic, "../Images/Driver/driving_license/$driving_license_pic");
             move_uploaded_file($temp_driver_pic, "../Images/Driver/profile/$driver_pic");
 
-            $insert = "INSERT INTO `driver_details`
+            $insert = "INSERT INTO `pending_driver_details`
                 (`driver_id`, `full_name`, `address`, `post_code`, `phone`, `driving_license_no`, `cnic`, `driver_pic`, `driving_license_pic`, `cnic_front_pic`, `cnic_back_pic`)
                 VALUES 
                 ('$driverId','$full_name','$address','$post_code','$phone','$driving_license_no','$cnic','$driver_pic','$driving_license_pic','$cnic_front_pic','$cnic_back_pic')";
