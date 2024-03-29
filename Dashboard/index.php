@@ -1,27 +1,33 @@
-<?php 
+<?php
 session_start(); // Start the session
 
-// Check if the user has completed the necessary steps
-if (!isset($_SESSION['registration_step']) || $_SESSION['registration_step'] < 1) {
-    header("Location: sign_up.php"); // Redirect to the signup.php page if the necessary steps are not completed
-    exit;
+// Check if the driver is logged in
+if (!isset($_SESSION['driver'])) {
+    // Driver is not logged in, check registration steps
+    // Check if the user has completed the necessary steps
+    if (!isset($_SESSION['registration_step']) || $_SESSION['registration_step'] < 1) {
+        header("Location: sign_up.php"); // Redirect to the signup.php page if the necessary steps are not completed
+        exit;
+    }
+
+    // Check if the user has completed the second step
+    if ($_SESSION['registration_step'] < 2) {
+        header("Location: driver_details.php"); // Redirect to the driver_details.php page if the second step is not completed
+        exit;
+    }
+
+    // Check if the user has completed the third step
+    if ($_SESSION['registration_step'] < 3) {
+        header("Location: add_vehicle.php"); // Redirect to the add_vehicle.php page if the third step is not completed
+        exit;
+    }
 }
 
-// Check if the user has completed the second step
-if ($_SESSION['registration_step'] < 2) {
-    header("Location: driver_details.php"); // Redirect to the driver_details.php page if the second step is not completed
-    exit;
-}
-
-// Check if the user has completed the third step
-if ($_SESSION['registration_step'] < 3) {
-    header("Location: add_vehicle.php"); // Redirect to the add_vehicle.php page if the third step is not completed
-    exit;
-}
-
+// Driver is logged in, include the dashboard or other content
 include("./common/nav.php");
-// include
+// include additional content here
 ?>
+
                 <!-- end sidebar menu --><!-- start page content -->
                 <div class="page-content-wrapper">
                     <div class="page-content">
